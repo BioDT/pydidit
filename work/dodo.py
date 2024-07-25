@@ -1,6 +1,19 @@
 from didit.reporter import WorkflowRunROCrateReporter
 
-DOIT_CONFIG = {'reporter': WorkflowRunROCrateReporter}
+reporter_options = {
+    "crate_profile": "process-run",
+    "agent":
+    {
+        "name": "John Doe",
+        "affiliation": "University of Nowhere",
+        "orcid_url": "https://orcid.org/0000-0002-1825-0097"
+    }
+}
+
+DOIT_CONFIG = {
+    'reporter': WorkflowRunROCrateReporter(options=reporter_options)
+}
+
 
 def task_modify():
     return {'actions': ["echo bar > foo.txt"],

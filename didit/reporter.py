@@ -7,10 +7,9 @@ import time
 import datetime
 import json
 from io import StringIO
+import didit.profiles as profiles
 
 from rocrate.rocrate import ROCrate
-
-from doit.exceptions import BaseFail
 
 class TaskResult():
     """ Task result data object i.e. the result of a single task
@@ -71,13 +70,31 @@ class WorkflowRunROCrateReporter():
 
     desc = 'output as Workflow Run RO-Crate'
 
-    def __init__(self, outstream, options=None):  # pylint: disable=W0613
-
-        # Create ROCrate object
-        self.crate = ROCrate()
+    def __init__(self, outstream=sys.stdout, options=None):
+        # ----------------------------------------------------------------------
+        # Initialize the reporter options
         
-        # options parameter is not used
-        # json result is sent to stdout when doit finishes running
+        self.options = options
+        if self.options['crate_profile'] not in profiles.profiles:
+            raise Exception("Invalid crate profile")
+        else:
+            self.options_schema = profiles.profiles[self.options['crate_profile']]
+
+        # ----------------------------------------------------------------------
+        # Validate the reporter options
+
+        valid = self.options_schema.validate(self.options)
+        if not valid:
+            raise Exception("Invalid reporter options")
+
+        # ----------------------------------------------------------------------
+        # Create the RO-Crate object for reporting provenance
+
+        self.crate = ROCrate()
+
+        # ----------------------------------------------------------------------
+        # Onward!
+        
         self.t_results = {}
         # when using json reporter output can not contain any other output
         # than the json data. so anything that is sent to stdout/err needs to
@@ -147,6 +164,3 @@ class WorkflowRunROCrateReporter():
         json_data = {'tasks': task_result_list,
                      'out': log_out,
                      'err': log_err}
-        # indent not available on simplejson 1.3 (debian etch)
-        # json.dump(json_data, sys.stdout, indent=4)
-        json.dump(json_data, self.outstream)
