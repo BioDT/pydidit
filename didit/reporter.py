@@ -10,6 +10,7 @@ from io import StringIO
 import didit.profiles as profiles
 
 from rocrate.rocrate import ROCrate
+from rocrate.model.person import Person
 
 class TaskResult():
     """ Task result data object i.e. the result of a single task
@@ -93,6 +94,17 @@ class WorkflowRunROCrateReporter():
         self.crate = ROCrate()
 
         # ----------------------------------------------------------------------
+        # Parse metadata from the reporter options and add to the RO-Crate
+
+        author_input = Person(self.crate,
+                              self.options['agent']['orcid_url'],
+                              properties={
+                                  "name": self.options['agent']['name'],
+                                  "affiliation": self.options['agent']['affiliation']
+                              })                        
+        author = self.crate.add(author_input)
+
+        # ----------------------------------------------------------------------
         # Onward!
         
         self.t_results = {}
@@ -147,7 +159,7 @@ class WorkflowRunROCrateReporter():
         """called when finished running all tasks"""
 
         # Serialize the ROCrate object to disk
-        self.crate.write("crate.zip")
+        self.crate.write("crate")
         
         # restore stdout
         log_out = sys.stdout.getvalue()
