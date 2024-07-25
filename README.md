@@ -33,35 +33,11 @@ Before running the project, you need to create a `work` directory in the root di
 mkdir work
 ```
 
-The work directory needs to container a dodo.py file. This file contains the tasks that need to be run by the project. You can create a dodo.py file with the following content:
-
-```python
-from didit.reporter import WorkflowRunROCrateReporter
-
-DOIT_CONFIG = {'reporter': WorkflowRunROCrateReporter}
-
-def task_modify():
-    return {'actions': ["echo bar > foo.txt"],
-            'file_dep': ["foo.txt"],
-            }
-
-def task_create():
-    return {'actions': ["touch foo.txt"],
-            'targets': ["foo.txt"]
-            }
-
-def task_say_hello():
-    return {'actions': ["echo hello"],
-            }
-```
-
-This file contains three tasks:
-- `create`: This task creates a file called `foo.txt`.
-- `modify`: This task modifies the `foo.txt` file by writing `bar` to it.
-- `say_hello`: This task prints `hello` to the console.
+The work directory needs to container a dodo.py file. This file contains the tasks that need to be run by the project. You can find an example dodo.py file in the work directory of the project.
 
 The `DOIT_CONFIG` variable is used to configure the project. In this case, we are using the `WorkflowRunROCrateReporter` reporter to generate a Research Object Crate (RO-Crate) for the project.
 
+the `reporter_options` variable is used to configure the reporter. This contains a dictionary which must container additional metadata needed to generate the specified level of RO-Crate. The `profile` key is used to specify the profile of the RO-Crate to generate.
 #### Step 3: Running the project
 
 To run the project, you can run the following command:
@@ -128,17 +104,26 @@ This will build the project and create a Docker image with the name `doit`.
 
 Before running the project, you need to create a `work` directory in the root directory of the project. This directory will be used to store the input and output files for the project and must container a dodo.py file. For details on an exapmle dodo.py file you can view the tutorial.
 
-##### Running the project
+##### Running 
 
 To run the project, you can run the following command:
 
 ```bash
-docker run  -v ./work:/work -v ./didit/:/work/didit -w /workdoit
+docker run  -v ./work:/work -v ./didit/:/work/didit -w /work doit
 ```
 
 Where:
 - `-v ./work:/work` mounts the `work` directory in the current directory to the `/work` directory in the container.
 - `-v ./didit/:/work/didit` mounts the `didit` directory in the current directory to the `/work/didit` directory in the container.
 - `-w /work` sets the working directory in the container to `/work`.
+
+#### Running Tests
+
+To run the testing suite, you can run the following command:
+
+    
+```bash
+docker run  -v ./work:/work -v ./didit/:/work/didit  -v ./tests/:/work/tests -w /work --entrypoint pytest doit
+```
 
 ### Reference
