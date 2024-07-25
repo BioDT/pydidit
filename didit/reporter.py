@@ -8,9 +8,14 @@ import datetime
 import json
 from io import StringIO
 import didit.profiles as profiles
+import logging
 
 from rocrate.rocrate import ROCrate
 from rocrate.model.person import Person
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 class TaskResult():
     """ Task result data object i.e. the result of a single task
@@ -23,8 +28,9 @@ class TaskResult():
     - elapsed (float): time (in secs) taken to execute task
     """
 
-    # FIXME what about returned value from python-actions ?
     def __init__(self, task):
+        """initialize task result"""
+        logger.debug("TASK: Initializing TaskResult")
         self.task = task
         self.result = None  # fail, success, up-to-date, ignore
         self.out = None  # stdout from task
@@ -37,10 +43,14 @@ class TaskResult():
 
     def start(self):
         """called when task starts its execution"""
+        logger.debug("TASK: TaskResult.start")
+
         self._started_on = time.time()
 
     def set_result(self, result, error=None):
         """called when task finishes its execution"""
+        logger.debug("TASK: TaskResult.set_result")
+
         self._finished_on = time.time()
         self.result = result
         line_sep = "\n<------------------------------------------------>\n"
@@ -50,6 +60,8 @@ class TaskResult():
 
     def to_dict(self):
         """convert result data to dictionary"""
+        logger.debug("TASK: TaskResult.to_dict")
+
         if self._started_on is not None:
             started = datetime.datetime.utcfromtimestamp(self._started_on)
             self.started = str(started.strftime('%Y-%m-%d %H:%M:%S.%f'))
@@ -72,6 +84,9 @@ class WorkflowRunROCrateReporter():
     desc = 'output as Workflow Run RO-Crate'
 
     def __init__(self, outstream=sys.stdout, options=None):
+        """initialize reporter"""
+        logger.debug("Initializing WorkflowRunROCrateReporter")
+
         # ----------------------------------------------------------------------
         # Initialize the reporter options
         
@@ -106,7 +121,7 @@ class WorkflowRunROCrateReporter():
 
         # ----------------------------------------------------------------------
         # Onward!
-        
+
         self.t_results = {}
         # when using json reporter output can not contain any other output
         # than the json data. so anything that is sent to stdout/err needs to
@@ -121,44 +136,56 @@ class WorkflowRunROCrateReporter():
 
     def get_status(self, task):
         """called when task is selected (check if up-to-date)"""
+        logger.debug("get_status")
+        
+        print("get_status")
         self.t_results[task.name] = TaskResult(task)
 
     def execute_task(self, task):
         """called when execution starts"""
+        logger.debug("execute_task")
         self.t_results[task.name].start()
 
     def add_failure(self, task, exception):
         """called when execution finishes with a failure"""
+        logger.debug("add_failure")
         self.t_results[task.name].set_result('fail', exception.get_msg())
 
     def add_success(self, task):
         """called when execution finishes successfully"""
+        logger.debug("add_success")
         self.t_results[task.name].set_result('success')
 
     def skip_uptodate(self, task):
         """skipped up-to-date task"""
+        logger.debug("skip_uptodate")
         self.t_results[task.name].set_result('up-to-date')
 
     def skip_ignore(self, task):
         """skipped ignored task"""
+        logger.debug("skip_ignore")
         self.t_results[task.name].set_result('ignore')
 
     def cleanup_error(self, exception):
         """error during cleanup"""
+        logger.debug("cleanup_error")
         self.errors.append(exception.get_msg())
 
     def runtime_error(self, msg):
         """error from doit (not from a task execution)"""
+        logger.debug("runtime_error")
         self.errors.append(msg)
 
     def teardown_task(self, task):
         """called when starts the execution of teardown action"""
+        logger.debug("teardown_task")
         pass
 
     def complete_run(self):
         """called when finished running all tasks"""
+        logger.debug("complete_run")
 
-        # Serialize the ROCrate object to disk
+        # Serialize the ROCrate object to disk (and make a debugging print)
         self.crate.write("crate")
         
         # restore stdout
