@@ -60,6 +60,21 @@ class WorkflowRunROCrateReporter():
         author = self.crate.add(author_input)
 
         # ----------------------------------------------------------------------
+        # Add the workflow source code file to the RO-Crate
+
+        path = Path(self.options['script_path'])
+        main_workflow = self.crate.add_workflow(source=path,
+                                                dest_path=path.name,
+                                                properties={
+                                                },
+                                                main=True,
+                                                lang="cwl",
+                                                )
+        main_workflow.append_to("author", author)
+        main_workflow.append_to("creator", author)
+        
+                
+        # ----------------------------------------------------------------------
         # Onward!
 
         self.t_results = {}

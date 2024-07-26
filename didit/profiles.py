@@ -9,7 +9,8 @@ process_run = Schema({
         'name': And(Use(str)),
         'affiliation': And(Use(str)),
         'orcid_url': And(Use(str)),
-    }
+    },
+    'script_path': And(Use(str))
 })
 
 workflow_run = Schema({
@@ -18,7 +19,8 @@ workflow_run = Schema({
         'name': And(Use(str)),
         'affiliation': And(Use(str)),
         'orcid_url': And(Use(str)),
-    }
+    },
+    'script_path': And(Use(str))
 })
 
 provenance_run = Schema({
@@ -27,7 +29,8 @@ provenance_run = Schema({
         'name': And(Use(str)),
         'affiliation': And(Use(str)),
         'orcid_url': And(Use(str)),
-    }
+    },
+    'script_path': And(Use(str))
 })
 
 
