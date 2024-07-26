@@ -108,7 +108,7 @@ class WorkflowRunROCrateReporter():
         # ----------------------------------------------------------------------
         # Onward!
 
-        self.t_results = {}
+        #self.t_results = {}
 
     def initialize(self, tasks, selected_tasks):
         """called before running tasks"""
@@ -117,33 +117,33 @@ class WorkflowRunROCrateReporter():
     def get_status(self, task):
         """called when task is selected (check if up-to-date)"""
         logger.debug("get_status")
-        self.t_results[task.name] = TaskResult(task)
+        #self.t_results[task.name] = TaskResult(task)
 
     def execute_task(self, task):
         """called when execution starts"""
         logger.debug("execute_task")
-        self.t_results[task.name].start()
+        #self.t_results[task.name].start()
 
     def add_failure(self, task, exception):
         """called when execution finishes with a failure"""
         logger.debug("add_failure")
-        self.t_results[task.name].set_result('fail', exception.get_msg())
+        #self.t_results[task.name].set_result('fail', exception.get_msg())
 
     def add_success(self, task):
         """called when execution finishes successfully"""
         logger.debug("add_success")
         logger.info(task)
-        self.t_results[task.name].set_result('success')
+        #self.t_results[task.name].set_result('success')
 
     def skip_uptodate(self, task):
         """skipped up-to-date task"""
         logger.debug("skip_uptodate")
-        self.t_results[task.name].set_result('up-to-date')
+        #self.t_results[task.name].set_result('up-to-date')
 
     def skip_ignore(self, task):
         """skipped ignored task"""
         logger.debug("skip_ignore")
-        self.t_results[task.name].set_result('ignore')
+        #self.t_results[task.name].set_result('ignore')
 
     def cleanup_error(self, exception):
         """error during cleanup"""
