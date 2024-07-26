@@ -103,8 +103,7 @@ class WorkflowRunROCrateReporter():
                                                 )
         main_workflow.append_to("author", author)
         main_workflow.append_to("creator", author)
-        
-                
+                        
         # ----------------------------------------------------------------------
         # Onward!
 
@@ -122,6 +121,26 @@ class WorkflowRunROCrateReporter():
     def execute_task(self, task):
         """called when execution starts"""
         logger.debug("execute_task")
+
+        # ----------------------------------------------------------------------
+        # Get the main workflow from the RO-Crate
+
+        path = Path(self.options['script_path'])
+        main_workflow = self.crate.get(path.name)
+
+        # ----------------------------------------------------------------------
+        # Parse the task objects for inputs and outputs
+        #
+        # Available:
+        #  'actions', 'calc_dep', 'cfg_values', 'check_attr', 'clean', 'clean_actions', 'creator_params', 'custom_title', 'dep_changed', 'doc', 'execute', 'execute_teardown', 'executed', 'file_dep', 'getargs', 'has_subtask', 'init_options', 'io', 'loader', 'meta', 'name', 'options', 'overwrite_verbosity', 'params', 'pickle_safe_dict', 'pos_arg', 'pos_arg_val', 'result', 'save_extra_values', 'setup_tasks', 'string_types', 'subtask_of', 'targets', 'task_dep', 'teardown', 'title', 'update_deps', 'update_from_pickle', 'uptodate', 'valid_attr', 'value_savers', 'values', 'verbosity', 'watch', 'wild_dep'
+
+        logger.info(dir(task))
+        logger.info(task.actions)
+
+        for input in file_dep:
+            input_file = self.crate.add_file(input)
+            main_workflow.add_used(input_file)
+
         #self.t_results[task.name].start()
 
     def add_failure(self, task, exception):
