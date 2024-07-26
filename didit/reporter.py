@@ -19,10 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class WorkflowRunROCrateReporter():
-    """ Report overall doit execution status/results 
-
-    
-    """
+    """ Report overall doit execution status/results as a Workflow Run RO-Crate """
 
     desc = 'output as Workflow Run RO-Crate'
 
@@ -66,22 +63,14 @@ class WorkflowRunROCrateReporter():
         # Onward!
 
         self.t_results = {}
-        # when using json reporter output can not contain any other output
-        # than the json data. so anything that is sent to stdout/err needs to
-        # be captured.
-        self._old_out = sys.stdout
-        sys.stdout = StringIO()
-        self._old_err = sys.stderr
-        sys.stderr = StringIO()
-        self.outstream = outstream
-        # runtime and cleanup errors
-        self.errors = []
+
+    def initialize(self, tasks, selected_tasks):
+        """called before running tasks"""
+        logger.debug("initialize")
 
     def get_status(self, task):
         """called when task is selected (check if up-to-date)"""
         logger.debug("get_status")
-        
-        print("get_status")
         self.t_results[task.name] = TaskResult(task)
 
     def execute_task(self, task):
@@ -97,6 +86,7 @@ class WorkflowRunROCrateReporter():
     def add_success(self, task):
         """called when execution finishes successfully"""
         logger.debug("add_success")
+        logger.info(task)
         self.t_results[task.name].set_result('success')
 
     def skip_uptodate(self, task):
