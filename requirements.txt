@@ -2,3 +2,5 @@ doit
 rocrate
 schema
 pytest
+linkml-validator
+linkml
