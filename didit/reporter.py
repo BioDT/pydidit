@@ -14,7 +14,7 @@ from rocrate.rocrate import ROCrate
 from rocrate.model.person import Person
 
 # Set up logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
