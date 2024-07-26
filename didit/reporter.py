@@ -60,6 +60,36 @@ class WorkflowRunROCrateReporter():
         author = self.crate.add(author_input)
 
         # ----------------------------------------------------------------------
+        # Add required metadata to declare that this is a Workflow Run RO-Crate
+
+        process_crate = rocrate.model.CreativeWork(
+            self.crate,
+            identifier="https://w3id.org/ro/wfrun/process/0.4",
+            properties={
+                "name": "Process Run Crate",
+                "version": "0.1"
+            })
+        self.crate.add(process_crate)
+
+        workflow_run_crate = rocrate.model.CreativeWork(
+            self.crate,
+            identifier="https://w3id.org/ro/wfrun/workflow/0.4",
+            properties={
+                "name": "Workflow Run Crate",
+                "version": "0.1"
+            })
+        self.crate.add(workflow_run_crate)
+        
+        workflow_crate = rocrate.model.CreativeWork(
+            self.crate,
+            identifier="https://w3id.org/workflowhub/workflow-ro-crate/1.0",
+            properties={
+                "name": "Workflow RO-Crate",
+                "version": "1.0"
+            })
+        self.crate.add(workflow_crate)    
+
+        # ----------------------------------------------------------------------
         # Add the workflow source code file to the RO-Crate
 
         path = Path(self.options['script_path'])
