@@ -7,7 +7,8 @@ reporter_options = {
         "name": "John Doe",
         "affiliation": "University of Nowhere",
         "orcid_url": "https://orcid.org/0000-0002-1825-0097"
-    }
+    },
+    "script_path": f"{__file__}"
 }
 
 DOIT_CONFIG = {
