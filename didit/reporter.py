@@ -17,63 +17,6 @@ from rocrate.model.person import Person
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-class TaskResult():
-    """ Task result data object i.e. the result of a single task
-
-    - result (str): fail, success, up-to-date, ignore
-    - out (str): stdout from task
-    - err (str): stderr from task
-    - error (str): error from doit (exception traceback)
-    - started (str): datetime when task execution started
-    - elapsed (float): time (in secs) taken to execute task
-    """
-
-    def __init__(self, task):
-        """initialize task result"""
-        logger.debug("TASK: Initializing TaskResult")
-        self.task = task
-        self.result = None  # fail, success, up-to-date, ignore
-        self.out = None  # stdout from task
-        self.err = None  # stderr from task
-        self.error = None  # error from doit (exception traceback)
-        self.started = None  # datetime when task execution started
-        self.elapsed = None  # time (in secs) taken to execute task
-        self._started_on = None  # timestamp
-        self._finished_on = None  # timestamp
-
-    def start(self):
-        """called when task starts its execution"""
-        logger.debug("TASK: TaskResult.start")
-
-        self._started_on = time.time()
-
-    def set_result(self, result, error=None):
-        """called when task finishes its execution"""
-        logger.debug("TASK: TaskResult.set_result")
-
-        self._finished_on = time.time()
-        self.result = result
-        line_sep = "\n<------------------------------------------------>\n"
-        self.out = line_sep.join([a.out for a in self.task.actions if a.out])
-        self.err = line_sep.join([a.err for a in self.task.actions if a.err])
-        self.error = error
-
-    def to_dict(self):
-        """convert result data to dictionary"""
-        logger.debug("TASK: TaskResult.to_dict")
-
-        if self._started_on is not None:
-            started = datetime.datetime.utcfromtimestamp(self._started_on)
-            self.started = str(started.strftime('%Y-%m-%d %H:%M:%S.%f'))
-            self.elapsed = self._finished_on - self._started_on
-        return {'name': self.task.name,
-                'result': self.result,
-                'out': self.out,
-                'err': self.err,
-                'error': self.error,
-                'started': self.started,
-                'elapsed': self.elapsed}
-
 
 class WorkflowRunROCrateReporter():
     """ Report overall doit execution status/results 
