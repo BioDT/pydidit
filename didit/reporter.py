@@ -166,4 +166,3 @@ class WorkflowRunROCrateReporter():
 
         # Serialize the ROCrate object to disk (and make a debugging print)
         self.crate.write("crate")
-        
