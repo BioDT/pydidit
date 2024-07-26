@@ -167,18 +167,3 @@ class WorkflowRunROCrateReporter():
         # Serialize the ROCrate object to disk (and make a debugging print)
         self.crate.write("crate")
         
-        # restore stdout
-        log_out = sys.stdout.getvalue()
-        sys.stdout = self._old_out
-        log_err = sys.stderr.getvalue()
-        sys.stderr = self._old_err
-
-        # add errors together with stderr output
-        if self.errors:
-            log_err += "\n".join(self.errors)
-
-        task_result_list = [
-            tr.to_dict() for tr in self.t_results.values()]
-        json_data = {'tasks': task_result_list,
-                     'out': log_out,
-                     'err': log_err}
