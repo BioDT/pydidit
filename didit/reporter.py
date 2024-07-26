@@ -9,9 +9,10 @@ import json
 from io import StringIO
 import didit.profiles as profiles
 import logging
+from pathlib import Path
 
 from rocrate.rocrate import ROCrate
-from rocrate.model.person import Person
+import rocrate.model
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -51,12 +52,12 @@ class WorkflowRunROCrateReporter():
         # ----------------------------------------------------------------------
         # Parse metadata from the reporter options and add to the RO-Crate
 
-        author_input = Person(self.crate,
-                              self.options['agent']['orcid_url'],
-                              properties={
-                                  "name": self.options['agent']['name'],
-                                  "affiliation": self.options['agent']['affiliation']
-                              })                        
+        author_input = rocrate.model.Person(self.crate,
+                                            identifier=self.options['agent']['orcid_url'],
+                                            properties={
+                                                "name": self.options['agent']['name'],
+                                                "affiliation": self.options['agent']['affiliation']
+                                            })                        
         author = self.crate.add(author_input)
 
         # ----------------------------------------------------------------------
