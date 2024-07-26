@@ -2,3 +2,5 @@
 *.txt
 *.db
 *pycache*
+
+work/crate
