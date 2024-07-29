@@ -1,8 +1,9 @@
 import pytest
 import subprocess
 import pathlib
+import json
 
-from linkml.validator import validate_file
+from linkml.validator import validate
 
 @pytest.fixture
 def crate_path():
@@ -23,18 +24,14 @@ def test_crate_valid(crate_path, schema_path):
     # Fail early if the task failed
     assert result.returncode == 0
 
-    # Verify that the output file exists
-    assert crate_path.exists()
+    # Load crate jsonld into json object
+    with open(crate_path, 'r') as f:
+        data = json.load(f)
+        report = validate(data, schema_path)
 
-    # Verify the schema file exists
-    assert schema_path.exists()
-
-    # Validate the output against the schema
-    report = validate_file(crate_path, schema_path, "Person")
-
-    try:
-        assert report.results == []
-    except AssertionError as e:
-        for r in report:
-            print(r)
-        raise e
+        try:
+            assert report.results == []
+        except AssertionError as e:
+            for r in report:
+                print(r)
+            raise e
