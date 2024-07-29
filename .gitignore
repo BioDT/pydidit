@@ -3,4 +3,4 @@
 *.db
 *pycache*
 
-work/crate
+work/crate/*
