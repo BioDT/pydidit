@@ -18,6 +18,7 @@ DOIT_CONFIG = {
 
 def task_modify():
     return {'actions': ["echo bar > foo.txt"],
+            'doc': "Modify foo.txt",
             'file_dep': ["foo.txt"],
             }
 
