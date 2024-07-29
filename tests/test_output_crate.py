@@ -15,7 +15,7 @@ def schema_path():
 def test_crate_valid(crate_path, schema_path):
     # Run doit to create the output
     result = subprocess.run(
-        ['doit', '-f', '/work/tests/task-success.py'],
+        ['doit', '-f', '/work/dodo.py'],
         capture_output=True,
         text=True
     )
@@ -30,7 +30,7 @@ def test_crate_valid(crate_path, schema_path):
     assert schema_path.exists()
 
     # Validate the output against the schema
-    report = validate_file("/work/tests/test.json", "/work/tests/schema.yaml", "Person")
+    report = validate_file(crate_path, schema_path, "Person")
 
     try:
         assert report.results == []
