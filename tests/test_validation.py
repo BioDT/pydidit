@@ -6,15 +6,15 @@ from linkml.validator import validate_file
 
 @pytest.fixture
 def test_pass_file_path():
-    return pathlib.Path("/work/tests/validation-test-pass.json")
+    return pathlib.Path("/work/tests/fixtures/validation/pass.json")
 
 @pytest.fixture
 def test_fail_file_path():
-    return pathlib.Path("/work/tests/validation-test-fail.json")
+    return pathlib.Path("/work/tests/fixtures/validation/fail.json")
 
 @pytest.fixture
 def test_schema_file_path():
-    return pathlib.Path("/work/tests/schema.yaml")
+    return pathlib.Path("/work/tests/fixtures/validation/schema.yaml")
 
 def test_validation_pass(test_pass_file_path, test_schema_file_path):
     report = validate_file(test_pass_file_path,
