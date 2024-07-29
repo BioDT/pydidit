@@ -1,18 +1,65 @@
-id: https://w3id.org/linkml/examples/personinfo
-name: personinfo
+id: profile-schema
+name: ProfileSchema
+description: A schema to validate a minimal profile entity within a context and graph
 prefixes:
   linkml: https://w3id.org/linkml/
-  personinfo: https://w3id.org/linkml/examples/personinfo
+  ex: https://example.org/
+
+default_prefix: ex
+default_range: string
+
 imports:
   - linkml:types
-default_range: string
-default_prefix: personinfo
 
 classes:
-  Person:
-    attributes:
-      id:
-      full_name:
-      aliases:
-      phone:
-      age:
+  Root:
+    description: The root class containing context and graph.
+    tree_root: true
+    slots:
+      - context
+      - graph
+
+  
+  CreativeWork:
+    description: A creative work such as a book, movie, or image.
+    slots:
+      - id
+      - type
+      - conformsTo
+      - about
+
+slots:
+  context:
+    name: context
+    alias: "@context"
+    range: string
+    multivalued: true
+    required: true
+
+  graph:
+    name: graph
+    alias: "@graph"
+    range: string
+    multivalued: true
+    required: true
+    
+  id:
+    name: id
+    alias: "@id"
+    identifier: true
+    range: string
+    required: true
+
+  type:
+    name: "type"
+    alias: "@type"
+    range: string
+    required: true
+
+  conformsTo:
+    range: string
+    required: true
+
+  about:
+    range: string
+    required: true
