@@ -27,11 +27,19 @@ def test_crate_valid(crate_path, schema_path):
     # Load crate jsonld into json object
     with open(crate_path, 'r') as f:
         data = json.load(f)
+
+        print("---------------------------------------------------")
+        print(data)
+        print("---------------------------------------------------")
+        
         report = validate(data, schema_path)
 
         try:
             assert report.results == []
         except AssertionError as e:
-            for r in report:
-                print(r)
+            from pprint import pprint
+            for r in report.results:
+                print()
+                pprint(r.message)
+                print()
             raise e
