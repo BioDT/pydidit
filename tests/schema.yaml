@@ -1,9 +1,9 @@
-id: profile-schema
-name: ProfileSchema
-description: A schema to validate a minimal profile entity within a context and graph
+id: ro-crate-schema
+name: ROCrateSchema
+description: A schema to validate a minimal RO-Crate entity with context and graph
 prefixes:
   linkml: https://w3id.org/linkml/
-  ex: https://example.org/
+  ex: http://example.org/
 
 default_prefix: ex
 default_range: string
@@ -19,47 +19,143 @@ classes:
       - context
       - graph
 
-  
-  CreativeWork:
-    description: A creative work such as a book, movie, or image.
+  Context:
+    description: The context of the RO-Crate.
     slots:
       - id
       - type
-      - conformsTo
+
+  Graph:
+    description: The contents of the RO-Crate.
+    slots:
+      - id
+      - type
+      - dataset
+      - metadata_file
+
+  Entity:
+    description: An entity within the RO-Crate.
+    slots:
+      - id
+      - type
+
+  Dataset:
+    description: A dataset within the RO-Crate.
+    slots:
+      - id
+      - type
+      - date_published
+
+  MetadataFile:
+    description: The RO-Crate metadata file.
+    slots:
+      - id
+      - type
       - about
+      - conformsTo
+      - person
+
+  Person:
+    description: A person such as an author or contributor in the RO-Crate.
+    slots:
+      - id
+      - type
+      - affiliation
+      - name
+
+  About:
+    description: A free text description of the entity.
+    slots:
+      - id
+      - dataset
+
+  ConformsTo:
+    description: The standard the entity conforms to.
+    slots:
+      - id
 
 slots:
+  root:
+    name: root
+    description: The root entity of the RO-Crate.
+    range: Root
+    required: true
+    
   context:
     name: context
     alias: "@context"
-    range: string
-    multivalued: true
+    description: The context of the RO-Crate.
+    range: Context
     required: true
 
   graph:
     name: graph
     alias: "@graph"
-    range: string
+    description: The contents of the RO-Crate.
     multivalued: true
-    required: true
+    range: Graph
     
   id:
     name: id
     alias: "@id"
+    description: The identifier of the entity.
     identifier: true
-    range: string
     required: true
+    range: uri
 
   type:
-    name: "type"
+    name: type
     alias: "@type"
+    description: The type of the entity.
     range: string
     required: true
 
-  conformsTo:
-    range: string
+  date_published:
+    name: date_published
+    alias: "datePublished"
+    description: The date the entity was published.
+    range: datetime
     required: true
 
   about:
+    name: about
+    description: Free text description of the entity.
+    range: About
+    required: true
+
+  conformsTo:
+    name: conformsTo
+    description: The standard the entity conforms to.
+    range: ConformsTo
+    required: true
+
+  affiliation:
+    name: affiliation
+    description: The affiliation of the person e.g. a university.
     range: string
     required: true
+
+  name:
+    name: name
+    description: The name of the person.
+    range: string
+    required: true
+
+  person:
+    name: person
+    description: The person entity.
+    range: Person
+    required: true
+    
+  dataset:
+    name: dataset
+    description: The root dataset entity.
+    range: Dataset
+    required: true
+
+  metadata_file:
+    name: metadata_file
+    description: The root metadata file entity.
+    range: MetadataFile
+    required: true
+    
